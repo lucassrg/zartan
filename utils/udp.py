@@ -191,6 +191,7 @@ def get_domain_parts_from_request():
         remaining_domain = ".".join(domain_parts[2:])
     else:
         # Assum local running
+        logger.debug("get_domain_parts_from_request() -- local running")
         udp_subdomain = "local"
         udp_app_name = os.getenv("APP_TEMPLATE", "local")
         remaining_domain = "local"
@@ -202,6 +203,7 @@ def get_domain_parts_from_request():
 
     logger.debug("udp_subdomain: {0}".format(udp_subdomain))
     logger.debug("udp_app_name: {0}".format(udp_app_name))
+    logger.debug("remaining_domain: {0}".format(remaining_domain))
 
     split_domain_parts = {
         "udp_subdomain": udp_subdomain,
@@ -215,6 +217,7 @@ def get_domain_parts_from_request():
 
 
 def safe_assign_config_item(key, source_collection, target_collection):
+    logger.debug("safe_assign_config_item()")
     if key in source_collection:
         # map sub dicts
         if isinstance(source_collection[key], dict):
@@ -247,7 +250,7 @@ def get_app_vertical():
 
 
 def get_udp_oauth_access_token(udp_config):
-    logger.debug("get_app_vertical()")
+    logger.debug("get_udp_oauth_access_token()")
     results = None
 
     udp_issuer = udp_config["issuer"]
@@ -261,27 +264,30 @@ def get_udp_oauth_access_token(udp_config):
         "Content-Type": "application/x-www-form-urlencoded",
         "Authorization": "Basic {0}".format(basic_auth_encoded)
     }
-
-    # logger.debug(oauth2_headers)
+    logger.debug("oauth2_headers: "+oauth2_headers)    
 
     url = "{0}?grant_type=client_credentials&scope=secrets:read".format(udp_token_endpoint)
 
     responseData = RestUtil.execute_post(url, headers=oauth2_headers)
-    # logger.debug(responseData)
+    logger.debug("responseData: "+responseData)
 
     if "access_token" in responseData:
         results = responseData["access_token"]
     else:
         logger.warning("Failed to get UDP Service OAuth token: {message}".format(message=responseData))
 
+    logger.debug("results: "+results)
     return results
 
 
 def get_udp_ns_fieldname(fieldname):
+    logger.debug("get_udp_ns_fieldname()")
     parts = get_domain_parts_from_request()
     # Fix for Okta Field Nameing Issue. Okta Custom Fields cannot contain dashes.
     udp_subdomain = parts["udp_subdomain"].replace("-", "_")
     udp_app_name = parts["udp_app_name"]
     field = "{subdomain}_{appname}_{fieldname}".format(subdomain=udp_subdomain, appname=udp_app_name, fieldname=fieldname)
+
+    logger.debug("get_udp_ns_fieldname():field: "+field)
 
     return field

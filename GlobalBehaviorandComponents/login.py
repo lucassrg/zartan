@@ -58,11 +58,15 @@ def gbac_login():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     loginmethod = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"]
 
+    logger.debug("gbac_login() - loginmethod: "+loginmethod)
+
     if (loginmethod == "hosted-widget"):
+        logger.debug("gbac_login() - hosted-widget")
         response = make_response(redirect(get_oauth_authorize_url(prompt="login")))
         return response
 
     else:
+        
         idplist = okta_admin.get_idps(None)
         facebook = ""
         google = ""
@@ -90,6 +94,10 @@ def gbac_login():
                 idptype = "OIDC"
                 idp = "true"
 
+        logger.debug("gbac_login() - idptype: "+idptype)
+
+        logger.debug("gbac_login() - render_template /login")
+
         return render_template(
             "/login.html",
             templatename=get_app_vertical(),
@@ -115,12 +123,18 @@ def gbac_signup():
 @apply_remote_config
 def gbac_logout():
     logger.debug("gbac_logout()")
-    redirect_url = "{host}/login/signout?fromURI={redirect_path}".format(
-        host=session[SESSION_INSTANCE_SETTINGS_KEY]["okta_org_name"],
-        redirect_path=url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+    
+    redirect_url = "{host}/v1/logout?id_token_hint={id_token}&post_logout_redirect_uri={redirect_path}".format(
+        id_token=TokenUtil.get_id_token(request.cookies),
+        host=session[SESSION_INSTANCE_SETTINGS_KEY]["issuer"],
+        redirect_path=url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))    
+    
+    logger.debug("redirect_url:{0}".format(redirect_url))
 
     response = make_response(redirect(redirect_url))
     response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
+    response.set_cookie(TokenUtil.ACCESS_TOKEN_KEY, "")
+    response.set_cookie(TokenUtil.ID_TOKEN_KEY, "")
     return response
 
 
@@ -281,6 +295,7 @@ def gbac_verify_totp():
 @gbac_bp.route("/access_token", methods=["POST"])
 @apply_remote_config
 def gbac_access_token():
+    logger.debug("gbac_access_token()")
     token = TokenUtil.get_access_token(request.cookies)
     decodedToken = TokenUtil.get_claims_from_token(token)
     return json.dumps(decodedToken)
@@ -289,6 +304,7 @@ def gbac_access_token():
 @gbac_bp.route("/id_token", methods=["POST"])
 @apply_remote_config
 def gbac_id_tokenp():
+    logger.debug("gbac_id_tokenp()")
     token = TokenUtil.get_id_token(request.cookies)
     decodedToken = TokenUtil.get_claims_from_token(token)
     return json.dumps(decodedToken)

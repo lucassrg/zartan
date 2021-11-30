@@ -478,7 +478,7 @@ class OktaAdmin:
         return RestUtil.execute_post(url, body, okta_headers)
 
     def get_groups_by_name(self, name):
-        self.logger.debug("OktaAdmin.get_groups_by_name(name)")
+        self.logger.debug("OktaAdmin.get_groups_by_name(name):"+name)
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/groups?q={name}".format(
             base_url=self.okta_config["okta_org_name"],
@@ -1555,7 +1555,7 @@ class TokenUtil:
 
     @staticmethod
     def get_access_token(collection):
-        # TokenUtil.logger.debug("get_access_token()")
+        TokenUtil.logger.debug("get_access_token()")
         return TokenUtil.get_jwt_token(collection, TokenUtil.ACCESS_TOKEN_KEY)
 
     @staticmethod
@@ -1565,16 +1565,21 @@ class TokenUtil:
 
     @staticmethod
     def get_jwt_token(collection, key):
-        # TokenUtil.logger.debug("get_jwt_token('{0}')".format(key))
+        TokenUtil.logger.debug("get_jwt_token('{0}')".format(key))
         token = None
-        if TokenUtil.OKTA_TOKEN_COOKIE_KEY in collection:
-            if collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY]:
-                token_cookie = TokenUtil.parse_encoded_okta_token_cookie(
-                    collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY])
-                # TokenUtil.logger.debug("token_cookie: {0}".format(token_cookie))
-                parsed_token_cookie = json.loads(token_cookie)
-                if key in parsed_token_cookie:
-                    token = parsed_token_cookie[key][key]
+
+        if key in collection:
+            token = collection[key]
+
+        TokenUtil.logger.debug("get_jwt_token:token('{0}')".format(token))
+        # if TokenUtil.OKTA_TOKEN_COOKIE_KEY in collection:
+        #     if collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY]:
+        #         token_cookie = TokenUtil.parse_encoded_okta_token_cookie(
+        #             collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY])
+        #         # TokenUtil.logger.debug("token_cookie: {0}".format(token_cookie))
+        #         parsed_token_cookie = json.loads(token_cookie)
+        #         if key in parsed_token_cookie:
+        #             token = parsed_token_cookie[key][key]
 
         return token
 
@@ -1584,6 +1589,7 @@ class TokenUtil:
         result = False
 
         if token:
+            app_config["client_id"] = "0oa1xukmfw5g2HLql1d7"
             okta_auth = OktaAuth(app_config)
             introspect_result = okta_auth.introspect(token)
 

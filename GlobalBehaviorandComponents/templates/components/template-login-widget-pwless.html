@@ -7,6 +7,7 @@
             <!-- ================ -->
              <div class="main col-12">
                 <div class="form-block center-block p-30 light-gray-bg border-clear">
+                  
                   <style type="text/css">
                     #okta-sign-in.auth-container .button-primary
                     {
@@ -52,41 +53,87 @@
                     }
 
                   </style>
+                  
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
-                    new OktaSignIn({
-                      baseUrl: "{{config.okta_org_name}}",
-                      logo: "{{config.settings.app_logo}}",
-                      clientId: "{{config.client_id}}",
-                      redirectUri: "{{config.redirect_uri}}",
+                    var signIn = new OktaSignIn({
+                      baseUrl: 'https://oie-lucas-gomes.oktapreview.com',
+                      clientId: '0oa1z13djkhTYykyU1d7',
+                      redirectUri: "{{config.redirect_uri}}",                      
+                      useInteractionCodeFlow: true,
+                      authParams: {
+                        tokenManager: {
+                          storage: 'cookie'
+                        },
+                        issuer: 'https://oie-lucas-gomes.oktapreview.com/oauth2/aus1xuif79Ag29Vds1d7',
+                        scopes: ['openid', 'email', 'profile', 'address', 'phone']
+                      },
+                      language: 'en',
                       i18n: {
                         en: {
-                          'primaryauth.title': "Sign in to "+{{dumps(config.settings.app_name)|safe}}
+                          'primaryauth.title': 'Okta OIE - Embedded SIW Demo'
                         }
-                      },
-                      features: {
-                        registration: true,               // Enable self-service registration flow
-                        rememberMe: true,                 // Setting to false will remove the checkbox to save username
-                        multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
-                        selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
-                        smsRecovery: true,                // Enable SMS-based account recovery
-                        callRecovery: true,               // Enable voice call-based account recovery
-                        webauthn: true,                   // Enalbe passwordless
-                        passwordlessAuth: true
-                      },
+                      }
+                  });
+
+/* 
+
+                    var signIn = new OktaSignIn({
+                      baseUrl: "{{config.okta_org_name}}",
+                      clientId: "{{config.client_id}}",                      
+                      redirectUri: "{{config.redirect_uri}}",                      
+                      useInteractionCodeFlow: true,
                       authParams: {
                         issuer: "{{config.issuer}}",
-                        responseType: 'code',
-                        responseMode: 'form_post',
-                        state: '{{state}}',
-                        display: 'page',
-                        pkce: false,
                         scopes: ['openid', 'profile', 'email']
-                      },
-                    }).renderEl(
+                      }
+                    }); */
+
+                    console.log(signIn);
+
+                    signIn.showSignInToGetTokens({                      
+                        el: '#sign-in-widget'
+                    }).then(function(tokens) {                      
+                      console.log('logged in');
+                      // Store tokens
+                      /* signIn.authClient.tokenManager.setTokens(tokens); */
+                      console.log('Tokens: ',tokens);
+                      let access_token_cookie="accessToken="+tokens.accessToken.value+";";
+                      let id_token_cookie="idToken="+tokens.idToken.value+";";
+
+                      console.log('access_token: ', access_token_cookie);
+                      console.log('id_token: ', id_token_cookie);
+                      
+                      document.cookie = access_token_cookie;
+                      document.cookie = id_token_cookie;
+                      /* signIn.authClient.tokenManager.add("access_token",tokens.accessToken.value);
+                      signIn.authClient.tokenManager.add("id_token",tokens.idToken.value); */
+
+                      // Remove widget
+                      signIn.remove();
+                      console.log('logged in');
+                      location.href = "/";
+                      // Can now render in an authenticated state
+                    }).catch(function(error) {
+                      // Handle error
+                      console.log('Failed to Auth: '+error);
+                    });
+                    
+                    
+                    signIn.before('success-redirect', async () => {
+                      // custom logic can go here. when the function resolves, execution will continue.
+                      console.log('signIn.before');
+                    });
+
+                    signIn.after('identify', async () => {
+                      // custom logic goes here
+                      console.log('signIn.after');
+                    });
+
+                    /* .renderEl(
                       { el: '#sign-in-widget' },
                       function (res) {}
-                    );
+                    ); */
                   </script>
                 </div>
               </div>

@@ -9,11 +9,18 @@ locals {
   nodash_subdomain = replace(var.udp_subdomain, "-", "_")
 }
 
+terraform {
+  required_providers {
+    okta = {
+      source = "okta/okta"
+      version = "~> 3.19"
+    }
+  }
+}
 provider "okta" {
   org_name  = var.org_name
   api_token = var.api_token
   base_url  = var.base_url
-  version   = "~> 3.0"
 }
 data "okta_group" "all" {
   name = "Everyone"
@@ -96,25 +103,26 @@ resource "okta_group" "dealer_user" {
 }
 resource "okta_group" "dealer_loc1" {
   name        = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_Austin"
-  description = "Austin, Texas Branch"
+  description = "Austin, Texas"
 }
 resource "okta_group" "dealer_loc2" {
   name        = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_Chicago"
-  description = "Chicago, Illinois Branch"
+  description = "Chicago, Illinois"
 }
 resource "okta_group" "dealer_loc3" {
   name        = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_SF"
-  description = "San Fransisco, California Branch"
+  description = "San Fransisco, California"
 }
 resource "okta_group" "dealer_loc4" {
   name        = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_WashingtonDC"
-  description = "Washingthon DC Branch"
+  description = "Washington, DC"
 }
 output "client_id" {
   value = "${okta_app_oauth.dealer.client_id}"
 }
 output "client_secret" {
   value = "${okta_app_oauth.dealer.client_secret}"
+  sensitive = true
 }
 output "domain" {
   value = "${var.org_name}.${var.base_url}"

@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(raise_error_if_not_found=True))
 
 from . import __version__
 
@@ -20,7 +20,8 @@ default_settings = {
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
         "app_post_login_landing_url": os.getenv("APP_POST_LOGIN_LANDING_URL", "profile"),
-        "app_loginmethod": os.getenv("APP_LOGINMETHOD", "standard-widget"),
+        "app_loginmethod": os.getenv("APP_LOGINMETHOD", "passwordless-widget"),
+        #"app_loginmethod": os.getenv("APP_LOGINMETHOD", "standard-widget"),
         "app_name": os.getenv("APP_NAME", "Sample App"),
         "app_slogan": os.getenv("APP_SLOGAN", ""),
         "app_subslogan": os.getenv("APP_SUBSLOGAN", ""),
