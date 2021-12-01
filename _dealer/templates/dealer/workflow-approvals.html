@@ -75,9 +75,7 @@
         <script type="text/javascript">
              function runmyscript(mfachecked) {
                  console.log(mfachecked.active);
-                 if (mfachecked.active){
-                    document.getElementById('form_id').submit();
-                 }
+                 document.getElementById('form_id').submit();
              }
         </script>
          {% include '//components/template-mfa.html' %}

@@ -57,37 +57,24 @@
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
                     var signIn = new OktaSignIn({
-                      baseUrl: 'https://oie-lucas-gomes.oktapreview.com',
-                      clientId: '0oa1z13djkhTYykyU1d7',
+                      baseUrl: "{{config.okta_org_name}}",
+                      clientId: "{{config.client_id}}",
                       redirectUri: "{{config.redirect_uri}}",                      
                       useInteractionCodeFlow: true,
                       authParams: {
                         tokenManager: {
                           storage: 'cookie'
                         },
-                        issuer: 'https://oie-lucas-gomes.oktapreview.com/oauth2/aus1xuif79Ag29Vds1d7',
+                        issuer: "{{config.issuer}}",
                         scopes: ['openid', 'email', 'profile', 'address', 'phone']
                       },
                       language: 'en',
                       i18n: {
                         en: {
-                          'primaryauth.title': 'Okta OIE - Embedded SIW Demo'
+                          'primaryauth.title': 'Okta OIE - Demo'
                         }
                       }
                   });
-
-/* 
-
-                    var signIn = new OktaSignIn({
-                      baseUrl: "{{config.okta_org_name}}",
-                      clientId: "{{config.client_id}}",                      
-                      redirectUri: "{{config.redirect_uri}}",                      
-                      useInteractionCodeFlow: true,
-                      authParams: {
-                        issuer: "{{config.issuer}}",
-                        scopes: ['openid', 'profile', 'email']
-                      }
-                    }); */
 
                     console.log(signIn);
 
