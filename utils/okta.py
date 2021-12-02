@@ -1587,28 +1587,7 @@ class TokenUtil:
     @staticmethod
     def is_valid_remote(token, app_config):
         TokenUtil.logger.debug("is_valid_remote")
-
-
-        # TokenUtil.logger.debug("is_valid_remote:app_config:{0}".format(app_config))
-
-        # result = False
-
-        # if token:
-        #     # app_config["client_id"] = "0oa1xukmfw5g2HLql1d7"
-        #     app_config["client_id"] = app_config["client_id_webapp"]
-        #     okta_auth = OktaAuth(app_config)
-        #     introspect_result = okta_auth.introspect(token)
-
-        #     TokenUtil.logger.debug("get_jwt_token:introspect_result('{0}')".format(introspect_result))
-
-        #     if introspect_result:
-        #         if "active" in introspect_result:
-        #             result = introspect_result["active"]
-
-        # TokenUtil.logger.debug("is_valid_remote:result:{0}".format(result))
-
         result = True
-
         return result
 
 

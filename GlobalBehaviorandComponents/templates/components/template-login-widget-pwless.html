@@ -66,40 +66,24 @@
                           storage: 'cookie'
                         },
                         issuer: "{{config.issuer}}",
-                        /* issuer: "'https://oie-lucas-gomes.oktapreview.com/oauth2/aus1xuif79Ag29Vds1d7'", */
                         scopes: ['openid', 'email', 'profile', 'address', 'phone']
                       },
                       language: 'en',
                       i18n: {
                         en: {
-                          'primaryauth.title': 'Sign in to Atko Electric'
+                          'primaryauth.title': 'Okta OIE - Demo'
                         }
                       }
                   });
 
-/* 
-
-                    var signIn = new OktaSignIn({
-                      baseUrl: "{{config.okta_org_name}}",
-                      clientId: "{{config.client_id}}",                      
-                      redirectUri: "{{config.redirect_uri}}",                      
-                      useInteractionCodeFlow: true,
-                      authParams: {
-                        issuer: "{{config.issuer}}",
-                        scopes: ['openid', 'profile', 'email']
-                      }
-                    }); */
-
-                    console.log('Sign in: '+signIn);
+                    console.log(signIn);
 
                     signIn.showSignInToGetTokens({                      
                         el: '#sign-in-widget'
                     }).then(function(tokens) {                      
-                      console.log('logged in - '+tokens);
+                      console.log('logged in');
                       // Store tokens
-                      
                       /* signIn.authClient.tokenManager.setTokens(tokens); */
-                      
                       console.log('Tokens: ',tokens);
                       let access_token_cookie="accessToken="+tokens.accessToken.value+";";
                       let id_token_cookie="idToken="+tokens.idToken.value+";";
@@ -114,9 +98,8 @@
 
                       // Remove widget
                       signIn.remove();
-                      console.log('logged in - removed widget');
+                      console.log('logged in');
                       location.href = "/";
-                      console.log('logged in - set location to /');
                       // Can now render in an authenticated state
                     }).catch(function(error) {
                       // Handle error
