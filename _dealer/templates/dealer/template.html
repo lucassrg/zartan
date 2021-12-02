@@ -8,7 +8,13 @@
                     {% if user_info is none or user_info is not defined %}
                         {% set navitems ="navitems.html" %}
                     {% else %}
-                         {% set navitems ="navitemslogin.html" %}
+                        {% if user_info and user_info.groups %}
+                            {% if "Customer" in user_info.groups|join(' ') %}                        
+                                {% set navitems ="navitems.html" %}
+                            {% else %}
+                                {% set navitems ="navitemslogin.html" %}
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
 
                     {% with mynavitems = navitems %}

@@ -265,11 +265,18 @@ def workflow_approvals_get():
     if admin_group_id:
         # access_requests attribute contains workflow request
         # 'profile.access_requests  eq pr"
+
+        # logger.debug("get_udp_ns_fieldname(access_requests):{0}".format(get_udp_ns_fieldname("access_requests")))
+
         user_get_response = okta_admin.get_user_list_by_search(
-            'profile.{0} pr  '.format(get_udp_ns_fieldname("access_requests")))
+            'profile.{0} pr'.format(get_udp_ns_fieldname("access_requests")))
         for list in user_get_response:
+            logger.debug("list_in_user_get_response():{0}".format(list))
             for grp in list["profile"][get_udp_ns_fieldname("access_requests")]:
+                
                 group_get_response = okta_admin.get_group(id=grp)
+                logger.debug("group_get_response():{0}".format(json.dumps(group_get_response)))
+                logger.debug("group_get_response[...]():{0}".format(json.dumps(group_get_response["profile"]["description"])))
                 var = {
                     "requestor": list["profile"]["login"],
                     "request": group_get_response["profile"]["description"],
@@ -292,11 +299,13 @@ def workflow_approvals_get():
 @apply_remote_config
 @is_authenticated
 def workflow_approvals_post():
-    logger.debug("workflow_approvals()")
+    logger.debug("workflow_approvals_post()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
     user_id = user["id"]
+    
+    logger.debug("workflow_approvals():{0}",request.form)
 
     if request.form.get("action") == "reject":
         req = request.form.get("action_value")
@@ -335,10 +344,16 @@ def workflow_approvals_post():
         # Remove user attribute organization ( as the request has been rejected)
         user_data = {
             "profile": {
-                get_udp_ns_fieldname("access_requests"): grps
+                get_udp_ns_fieldname("access_requests"): grps,
+                "department": "Sales"
             }
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
+
+        user_activate_response = okta_admin.activate_user(user_id, send_email=True)
+        if "errorCode" in user_activate_response:
+            logger.debug("workflow_approvals_post():failed to activate user:{0}",user_activate_response)
+
 
     return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 

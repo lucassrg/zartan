@@ -12,6 +12,7 @@ def get_app_version():
 
 default_settings = {
     "client_id": os.getenv("OKTA_CLIENT_ID", ""),
+    "client_id_webapp": os.getenv("OKTA_CLIENT_ID_WEBAPP", ""),
     "client_secret": os.getenv("OKTA_CLIENT_SECRET", ""),
     "issuer": os.getenv("OKTA_ISSUER", ""),
     "app_config": os.getenv("SITE_APP_CONFIG", "./well-known/default-settings"),

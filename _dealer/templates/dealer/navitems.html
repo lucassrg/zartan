@@ -44,8 +44,10 @@
                         </div>
                     </div>
                 </li>
+                {% if user_info is none or user_info is not defined %}
                 <li class="nav-item dropdown dropdown-lg no-caret">
                     <a class="nav-link " href="/dealer/registration" role="button">Registration</a>
                 </li>
+                {% endif %}
             </ul>
         </div>

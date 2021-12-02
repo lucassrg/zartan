@@ -1,4 +1,7 @@
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+{% if user_info and user_info.groups %}
+{% if "_ADMIN" in user_info.groups|join(' ') %}
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link" href="/dealer/myapps">Applications</a></li>
                 <li class="nav-item dropdown dropdown-xl no-caret">
@@ -20,17 +23,13 @@
                                         <div class="dropdown-divider border-0"></div>
                                     </div>
                                 </div>
-                                {% if user_info and user_info.groups %}
-                                    {% if "_ADMIN" in user_info.groups|join(' ') %}
-                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <h6 class="dropdown-header text-primary">Approve Requests</h6>
-                                            <a class="dropdown-item" href="/dealer/workflow-approvals">Review Access</a>
-                                            <div class="dropdown-divider border-0"></div>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h6 class="dropdown-header text-primary">Approve Requests</h6>
+                                        <a class="dropdown-item" href="/dealer/workflow-approvals">Review Access</a>
+                                        <div class="dropdown-divider border-0"></div>
                                     </div>
-                                    {% endif %}
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,3 +59,5 @@
                 </li>
             </ul>
         </div>
+{% endif %}
+{% endif %}

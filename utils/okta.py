@@ -427,7 +427,7 @@ class OktaAdmin:
 
     def update_user(self, user_id, user):
         self.logger.debug("OktaAdmin.update_user()")
-        # self.logger.debug("User profile: {0}".format(json.dumps(user)))
+        self.logger.debug("OktaAdmin.update_user():User profile: {0}".format(json.dumps(user)))
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users/{user_id}".format(
             base_url=self.okta_config["okta_org_name"],
@@ -506,12 +506,13 @@ class OktaAdmin:
 
     def get_user_list_by_search(self, search):
         # /api/v1/users?search=profile.department eq "Engineering"
-        self.logger.debug("OktaAdmin.get_user_list_by_search(search)")
+        self.logger.debug("OktaAdmin.get_user_list_by_search(search):{0}".format(search))
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users?search={search}".format(
             base_url=self.okta_config["okta_org_name"],
             search=search)
 
+        self.logger.debug("OktaAdmin.get_user_list_by_search(url):{0}".format(url))
         return RestUtil.execute_get(url, okta_headers)
 
     def assign_user_to_group(self, group_id, user_id):
@@ -1585,17 +1586,7 @@ class TokenUtil:
 
     @staticmethod
     def is_valid_remote(token, app_config):
-        # TokenUtil.logger.debug("is_valid_remote")
-        # result = False
-
-        # if token:
-        #     app_config["client_id"] = "0oa1xv3ctaWQO7IYA1d7"
-        #     okta_auth = OktaAuth(app_config)
-        #     introspect_result = okta_auth.introspect(token)
-        #     if introspect_result:
-        #         if "active" in introspect_result:
-        #             result = introspect_result["active"]
-        #     TokenUtil.logger.debug("introspect_result:'{0}')".format(introspect_result))
+        TokenUtil.logger.debug("is_valid_remote")
         result = True
         return result
 
