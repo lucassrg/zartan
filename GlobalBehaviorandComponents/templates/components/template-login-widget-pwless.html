@@ -57,21 +57,22 @@
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
                     var signIn = new OktaSignIn({
-                      baseUrl: 'https://oie-lucas-gomes.oktapreview.com',
-                      clientId: '0oa1z13djkhTYykyU1d7',
+                      baseUrl: "{{config.okta_org_name}}",
+                      clientId: "{{config.client_id}}",
                       redirectUri: "{{config.redirect_uri}}",                      
                       useInteractionCodeFlow: true,
                       authParams: {
                         tokenManager: {
                           storage: 'cookie'
                         },
-                        issuer: 'https://oie-lucas-gomes.oktapreview.com/oauth2/aus1xuif79Ag29Vds1d7',
+                        issuer: "{{config.issuer}}",
+                        /* issuer: "'https://oie-lucas-gomes.oktapreview.com/oauth2/aus1xuif79Ag29Vds1d7'", */
                         scopes: ['openid', 'email', 'profile', 'address', 'phone']
                       },
                       language: 'en',
                       i18n: {
                         en: {
-                          'primaryauth.title': 'Okta OIE - Embedded SIW Demo'
+                          'primaryauth.title': 'Sign in to Atko Electric'
                         }
                       }
                   });
@@ -89,14 +90,16 @@
                       }
                     }); */
 
-                    console.log(signIn);
+                    console.log('Sign in: '+signIn);
 
                     signIn.showSignInToGetTokens({                      
                         el: '#sign-in-widget'
                     }).then(function(tokens) {                      
-                      console.log('logged in');
+                      console.log('logged in - '+tokens);
                       // Store tokens
+                      
                       /* signIn.authClient.tokenManager.setTokens(tokens); */
+                      
                       console.log('Tokens: ',tokens);
                       let access_token_cookie="accessToken="+tokens.accessToken.value+";";
                       let id_token_cookie="idToken="+tokens.idToken.value+";";
@@ -111,8 +114,9 @@
 
                       // Remove widget
                       signIn.remove();
-                      console.log('logged in');
+                      console.log('logged in - removed widget');
                       location.href = "/";
+                      console.log('logged in - set location to /');
                       // Can now render in an authenticated state
                     }).catch(function(error) {
                       // Handle error
