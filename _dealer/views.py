@@ -41,7 +41,6 @@ def dealer_profile_get():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
-
 # dealer my applications
 @dealer_views_bp.route("/myapps", methods=["GET"])
 @apply_remote_config
