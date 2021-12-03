@@ -12,7 +12,7 @@ from utils.udp import clear_session_decorator
 from json import dumps
 
 
-from GlobalBehaviorandComponents.validation import get_userinfo, check_okta_api_token, check_zartan_config
+from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, check_okta_api_token, check_zartan_config
 
 logger = logging.getLogger(__name__)
 
@@ -29,14 +29,12 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 @check_zartan_config
 def gbac_main():
     logger.debug("gbac_main()")
-    
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     
     user_info = get_userinfo()
     user = ""
     if user_info :
         user = okta_admin.get_user(user_info["sub"])
-    
     appurl = ""
     if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"] == "custom-widget":
         apps = okta_admin.get_applications_all()
@@ -51,6 +49,50 @@ def gbac_main():
         user_info=get_userinfo(),
          _scheme="https",
         config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
+
+# Order Page
+@gbac_bp.route("/order_post", methods=["POST"])
+@apply_remote_config
+@is_authenticated
+def ecommerce_order_post():
+    logger.debug("ecommerce_order_post()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    logger.debug(request)
+    firstname = request.form.get("firstName")
+    lastname = request.form.get("lastName")
+    email = request.form.get("email")
+    streetAddress = request.form.get("address")
+    city = request.form.get("city")
+    state = request.form.get("state")
+    zipCode = request.form.get("zip")
+    countryCode = request.form.get("country")
+
+    user_data = {
+        "profile": {
+            "firstName": firstname,
+            "lastName": lastname,
+            "email": email,
+            "streetAddress": streetAddress,
+            "city": city,
+            "state": state,
+            "zipCode": zipCode,
+            "countryCode": countryCode
+        }
+    }
+    logger.debug(user_data)
+    response = okta_admin.update_user(user_id=user_info["sub"], user=user_data)
+    logger.debug(response)
+
+    # /ecommerce/order?message=Order Complete
+    # return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+    return redirect(
+        url_for(
+            "ecommerce_views_bp.ecommerce_order",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            message="Order Complete"))
 
 
 @gbac_bp.route("/clear_session")
