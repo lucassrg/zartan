@@ -246,6 +246,10 @@
 
 <script>
 
+var products = [{title: "Tesla X",}, {title: "Tesla S"}, {title: "Tesla Y"}];
+
+sessionStorage.setItem('products', JSON.stringify(products));
+var obj = JSON.parse(sessionStorage.products);
 
     $( document ).ready(function() {
       console.log("documentready()");
@@ -308,7 +312,7 @@
         var total = 0;
         for(let i = 0; i < arrayList.length; i++){
            item = arrayList[i];
-           htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0'>"+item.name+"</h6></div><span class='text-muted'>" + item.price + "</span></li>";
+           htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0'>"+item.title+"</h6></div><span class='text-muted'>" + item.price + "</span></li>";
            console.log(total);
            total = Number(item.price) + Number(total);
         }
@@ -321,40 +325,7 @@
 
 
 
-    function additem(id, name, price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
 
-    function addcart(id)
-    {
-        var arrayList = getsessioncart();
-        var titlename = "title" + id;
-        var priceinfo = "price" + id;
-
-        var cartitem = new additem(id, $("#"+titlename).val(), $("#"+priceinfo).val());
-        arrayList.push(cartitem);
-
-        newproducts = JSON.stringify(arrayList);
-        window.sessionStorage["products"] = newproducts;
-        cart();
-    }
-
-    function removecart(id)
-    {
-        var arrayList = getsessioncart();
-
-        var index = arrayList.map(x => {
-          return x.id;
-        }).indexOf(id);
-
-        arrayList.splice(index, 1);
-
-        newproducts = JSON.stringify(arrayList);
-        window.sessionStorage["products"] = newproducts;
-        cart();
-    }
 
     function getsessioncart()
     {
