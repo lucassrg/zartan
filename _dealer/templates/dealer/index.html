@@ -69,6 +69,7 @@
         </div>
     </div>
 </section>
+{% if user_info %}
 <section class="bg-light py-5">
     <div class="container">
        <div class="card mb-4">
@@ -125,7 +126,7 @@
 
                         <div class="mb-3">
                           <label for="address">Address</label>
-                          <input type="text" class="form-control" name="address" id="address" required="" value="{{ user['profile']['streetAddress'] }}">
+                          <input type="text" class="form-control" name="address" id="address" required="" value="{{ user['profile']['postalAddress'] }}">
                           <div class="invalid-feedback">
                             Please enter your shipping address.
                           </div>
@@ -216,6 +217,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 <section class="bg-img-cover overlay overlay-80 py-10"
           style='background-image: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/hotelroom.jpg")'>
     <div class="container position-relative">
@@ -239,139 +241,6 @@
     </div>
 </section>
 
-<script>
-
-
-    $( document ).ready(function() {
-      console.log("documentready()");
-      cart();
-      creditcard();
-    });
-
-    function creditcard()
-    {
-      console.log("creditcard()");
-      creditcardinfo = window.sessionStorage["creditcard"];
-      creditcard = JSON.parse(creditcardinfo);
-
-
-      if (creditcard != "")
-      {
-        $("#cc-name").val(creditcard.name);
-        $("#cc-number").val(creditcard.cardnumber);
-        $("#cc-expiration").hide();
-        $("#cc-cvv").hide();
-        $("#applycc").hide();
-        $("#cc-exptitle").hide();
-        $("#cc-cvvtitle").hide();
-        $("#customcard").prop('checked',true);
-      }
-    }
-
-    function addorder(id, name, price) {
-        this.ordernumber = Math.floor(Math.random() * 10000);;
-        this.products = getsessioncart();
-        var arrayList = getsessioncart();
-        total = "";
-        for(let i = 0; i < arrayList.length; i++){
-           total = Number(item.price) + Number(total);
-        }
-        this.total = total.toFixed(2);
-        this.payment = $("#paymentMethod:checked").val();
-    }
-
-    function checkout()
-    {
-      console.log("checkout()");
-      order = [];
-      order = new addorder();
-      neworder = JSON.stringify(order);
-      window.sessionStorage["order"] = neworder;
-
-      //location.href="/ecommerce/order?message=Order Complete"
-      document.getElementById("checkoutform").submit();
-
-      window.sessionStorage.removeItem("products");
-    }
-
-    function cart()
-    {
-        htmlresponse = "";
-        $("#checkoutcart").html("");
-
-        var arrayList = getsessioncart();
-        var total = 0;
-        for(let i = 0; i < arrayList.length; i++){
-           item = arrayList[i];
-           htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0'>"+item.name+"</h6></div><span class='text-muted'>" + item.price + "</span></li>";
-           console.log(total);
-           total = Number(item.price) + Number(total);
-        }
-        htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between'><span>Total (USD)</span><strong>$" + total.toFixed(2) +"</strong></li>";
-
-        $("#checkoutcart").html(htmlresponse);
-        $("#cartcount").text(arrayList.length);
-
-    }
-
-
-
-    function additem(id, name, price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    function addcart(id)
-    {
-        var arrayList = getsessioncart();
-        var titlename = "title" + id;
-        var priceinfo = "price" + id;
-
-        var cartitem = new additem(id, $("#"+titlename).val(), $("#"+priceinfo).val());
-        arrayList.push(cartitem);
-
-        newproducts = JSON.stringify(arrayList);
-        window.sessionStorage["products"] = newproducts;
-        cart();
-    }
-
-    function removecart(id)
-    {
-        var arrayList = getsessioncart();
-
-        var index = arrayList.map(x => {
-          return x.id;
-        }).indexOf(id);
-
-        arrayList.splice(index, 1);
-
-        newproducts = JSON.stringify(arrayList);
-        window.sessionStorage["products"] = newproducts;
-        cart();
-    }
-
-    function getsessioncart()
-    {
-        var arrayList = [];
-        try
-        {
-            currentproduct = window.sessionStorage["products"];
-            if (typeof currentproduct == 'undefined')
-            {
-            }
-            else
-            {
-                arrayList = JSON.parse(currentproduct);
-            }
-        }
-        catch (exception)
-        {
-
-        }
-        return arrayList;
-    }
-</script>
 {% endblock %}
 
 {% block footer %}
