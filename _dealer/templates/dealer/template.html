@@ -11,8 +11,10 @@
                         {% if user_info and user_info.groups %}
                             {% if "Customer" in user_info.groups|join(' ') %}                        
                                 {% set navitems ="navitems.html" %}
+                            {% elif "_ADMIN" in user_info.groups|join(' ') %}
+                                {% set navitems ="navitems-admin.html" %}
                             {% else %}
-                                {% set navitems ="navitemslogin.html" %}
+                                {% set navitems ="navitems-sales.html" %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
