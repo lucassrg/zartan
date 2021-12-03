@@ -246,7 +246,12 @@
 
 <script>
 
-var products = [{title: "Tesla X",}, {title: "Tesla S"}, {title: "Tesla Y"}];
+var allProducts = [
+
+    {title: "Model X", img: "https://tesla-cdn.thron.com/delivery/public/image/tesla/56cb8c41-e898-44ce-b6b7-fe9b9a05f529/bvlatuR/std/1200x628/MS-Social", price: "$104,990"}, 
+    {title: "Truck", img: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2022-tesla-cyber-truck-mmp-1-1579127142.jpg?crop=0.788xw:1.00xh;0.107xw,0&resize=640:*", price: "$39,990"}, 
+    {title: "Pickup", img: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/tesla-pickup-rendering-copy-1559664544.jpg", price: "$75,990"}];
+var products = [allProducts[Math.floor(Math.random()*allProducts.length)]];
 
 sessionStorage.setItem('products', JSON.stringify(products));
 var obj = JSON.parse(sessionStorage.products);
@@ -312,11 +317,12 @@ var obj = JSON.parse(sessionStorage.products);
         var total = 0;
         for(let i = 0; i < arrayList.length; i++){
            item = arrayList[i];
-           htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0'>"+item.title+"</h6></div><span class='text-muted'>" + item.price + "</span></li>";
-           console.log(total);
-           total = Number(item.price) + Number(total);
+           htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between lh-condensed'><div><h6 class='my-0'>"+item.title+"</h6></div><span class='text-muted'>" + item.price + "</span><img src="+ item.img + " width=500></li>";
+           total = item.price;
+          console.log(total);
+
         }
-        htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between'><span>Total (USD)</span><strong>$" + total.toFixed(2) +"</strong></li>";
+        htmlresponse = htmlresponse + "<li class='list-group-item d-flex justify-content-between'><span>Total (USD)</span><strong>" + total +"</strong></li>";
 
         $("#checkoutcart").html(htmlresponse);
         $("#cartcount").text(arrayList.length);
