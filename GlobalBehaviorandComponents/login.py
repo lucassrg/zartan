@@ -183,9 +183,10 @@ def gbac_logout():
     logger.debug("redirect_url:{0}".format(redirect_url))
 
     response = make_response(redirect(redirect_url))
-    response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
-    response.set_cookie(TokenUtil.ACCESS_TOKEN_KEY, "")
-    response.set_cookie(TokenUtil.ID_TOKEN_KEY, "")
+
+    response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "", expires=0)
+    response.set_cookie(TokenUtil.ACCESS_TOKEN_KEY, "", expires=0)
+    response.set_cookie(TokenUtil.ID_TOKEN_KEY, "", expires=0)    
     return response
 
 
