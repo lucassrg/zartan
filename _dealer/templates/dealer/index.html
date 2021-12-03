@@ -28,6 +28,8 @@
 </header>
 {% endif %}
 {% if user_info %}
+
+{% if "Customer" in user_info.groups|join(' ') %}        
 <section class="bg-light py-5">
     <div class="container">
        <div class="card mb-4">
@@ -42,8 +44,6 @@
                 </div>
             </div>
         </div>
-
-        {% if "Customer" in user_info.groups|join(' ') %}        
         <hr class="mb-12" />
         <div class="card mb-12">
             <div class="card-body">
@@ -174,10 +174,10 @@
                     </div>
                 </div>
             </div>
-          {% endif %}
         </div>
     </div>
 </section>
+{% endif %}
 {% endif %}
 <section class="bg-white py-10">
     <div class="container">
