@@ -81,6 +81,19 @@
 
                     console.log(signIn);
 
+                    // after successful authentication with IdP
+                    signIn.authClient.session.exists().then(
+                      function (sessionExists) {
+                        if (sessionExists) {
+                          signIn.authClient.token.getWithoutPrompt().then(
+                            function (response) {
+                              signIn.authClient.tokenManager.setTokens(response.tokens);
+                            });
+                        }
+                      }
+                    );
+
+
                     signIn.showSignInToGetTokens({                      
                         el: '#sign-in-widget'
                     }).then(function(tokens) {                      
@@ -96,6 +109,8 @@
                       
                       document.cookie = access_token_cookie;
                       document.cookie = id_token_cookie;
+
+                      
                       /* signIn.authClient.tokenManager.add("access_token",tokens.accessToken.value);
                       signIn.authClient.tokenManager.add("id_token",tokens.idToken.value); */
 
