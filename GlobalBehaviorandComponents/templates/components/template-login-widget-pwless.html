@@ -87,7 +87,16 @@
                         if (sessionExists) {
                           signIn.authClient.token.getWithoutPrompt().then(
                             function (response) {
-                              signIn.authClient.tokenManager.setTokens(response.tokens);
+                              /* signIn.authClient.tokenManager.setTokens(response.tokens); */
+                              let access_token_cookie="accessToken="+tokens.accessToken.value+";";
+                              let id_token_cookie="idToken="+tokens.idToken.value+";";
+
+                              console.log('access_token: ', access_token_cookie);
+                              console.log('id_token: ', id_token_cookie);
+                              
+                              document.cookie = access_token_cookie;
+                              document.cookie = id_token_cookie;
+
                             });
                         }
                       }
