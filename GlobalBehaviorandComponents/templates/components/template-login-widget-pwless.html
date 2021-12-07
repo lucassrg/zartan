@@ -68,12 +68,12 @@
                         issuer: "{{config.issuer}}",
                         scopes: ['openid', 'email', 'profile', 'address', 'phone']
                       },
-                      features: {
+                      /* features: {
                         idpDiscovery: true
                       },
                       idpDiscovery: {
                          requestContext: window.location.href
-                      },
+                      }, */
                       language: 'en',
                       i18n: {
                         en: {
@@ -84,13 +84,12 @@
 
                     console.log(signIn);
 
-                    // after successful authentication with IdP
+                    /* // after successful authentication with IdP
                     signIn.authClient.session.exists().then(
                       function (sessionExists) {
                         if (sessionExists) {
                           signIn.authClient.token.getWithoutPrompt().then(
                             function (response) {
-                              /* signIn.authClient.tokenManager.setTokens(response.tokens); */
                               let access_token_cookie="accessToken="+tokens.accessToken.value+";";
                               let id_token_cookie="idToken="+tokens.idToken.value+";";
 
@@ -103,7 +102,7 @@
                             });
                         }
                       }
-                    );
+                    ); */
 
 
                     signIn.showSignInToGetTokens({                      
