@@ -119,6 +119,9 @@ def gbac_login():
     else:
         
         idplist = okta_admin.get_idps(None)
+
+        logger.debug("gbac_login() - idplist:{0}".format(idplist))
+
         facebook = ""
         google = ""
         linkedin = ""
