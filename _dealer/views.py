@@ -327,10 +327,17 @@ def workflow_approvals_post():
 
     if request.form.get("action") == "approve":
         req = request.form.get("action_value")
+
+        logger.debug("workflow_approvals():approve:request:{0}",req) 
+
         req = req.replace("\'", "\"")
         req = json.loads(req)
+
+        
         user_id = req["user_id"]
         group_id = req["group_id"]
+        logger.debug("workflow_approvals():approve:request:user_id{0}",user_id) 
+        logger.debug("workflow_approvals():approve:request:group_id{0}",group_id) 
 
         # Assign user to group
         okta_admin.assign_user_to_group(group_id, user_id)
