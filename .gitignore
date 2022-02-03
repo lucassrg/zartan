@@ -351,3 +351,4 @@ tags
 
 # End of https://www.gitignore.io/api/git,vim,node,venv,macos,dotenv,python,cloud9,terraform,visualstudiocode
 .add_env_vars-atko-electric-sales.sh
+.env copy
