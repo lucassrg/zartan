@@ -67,7 +67,7 @@
                     
                     {% for app in apps %}
                       {% if app["_links"]["appLinks"] %}
-                        {%  if "Salesforce" in app.label %}                          
+                        {%  if "Sales" in app.label %}                          
                           {% set ns.isSalesforce = true %}
                           <div class="col-xxl-3 col-lg-4">
                               <div class="card text-white mb-4">
